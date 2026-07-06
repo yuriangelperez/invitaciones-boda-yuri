@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - Boda C&M</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,400&family=Montserrat:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <!-- Enlazamos el estilo base y el nuevo de administrador -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="admin-style.css">
+</head>
+
+<body>
+
+    <div class="admin-container">
+        <h1 class="section-title">Panel de Control</h1>
+        <p class="admin-subtitle">Lista global de confirmaciones de la boda de Clara y Mateo.</p>
+
+        <!-- Tarjetas de Métricas -->
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <h3>Total Respuestas</h3>
+                <p id="metric-respuestas">0</p>
+            </div>
+            <div class="metric-card">
+                <h3>Confirmados (SÍ)</h3>
+                <p id="metric-si">0</p>
+            </div>
+            <div class="metric-card">
+                <h3>No Asisten</h3>
+                <p id="metric-no">0</p>
+            </div>
+            <div class="metric-card">
+                <h3>Con Vehículo</h3>
+                <p id="metric-autos">0</p>
+            </div>
+        </div>
+        <!-- Generador de Links personalizados -->
+        <div class="metric-card" style="text-align: left; margin-bottom: 2rem;">
+            <h3 style="margin-bottom: 1rem;">Generador de Links de Invitación</h3>
+            <div class="generator-form" style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end;">
+                <div style="flex: 2; min-width: 200px;">
+                    <label for="gen-nombre"
+                        style="display:block; font-size:0.8rem; margin-bottom:0.3rem; color:var(--muted);">Nombre del
+                        Invitado o Familia:</label>
+                    <input type="text" id="gen-nombre" placeholder="Ej: Familia Gomez o Juan Perez"
+                        style="width:100%; padding:0.6rem; border:1px solid var(--line); border-radius:4px; font-family:inherit;">
+                </div>
+                <div style="flex: 1; min-width: 80px;">
+                    <label for="gen-pases"
+                        style="display:block; font-size:0.8rem; margin-bottom:0.3rem; color:var(--muted);">Pases:</label>
+                    <input type="number" id="gen-pases" min="1" value="2"
+                        style="width:100%; padding:0.6rem; border:1px solid var(--line); border-radius:4px; font-family:inherit;">
+                </div>
+                <button id="btn-generar" class="btn-action" style="padding: 0.65rem 1.5rem;">Generar Link</button>
+            </div>
+
+            <!-- Resultado -->
+            <div id="resultado-link-container"
+                style="display: none; margin-top: 1.5rem; padding: 1rem; background: var(--bg-soft); border-radius: 6px; border: 1px dashed var(--primary);">
+                <p style="font-size: 0.85rem; margin-bottom: 0.5rem; color: var(--primary); font-weight: 600;">¡Link
+                    generado con éxito!</p>
+                <div style="display: flex; gap: 0.5rem;">
+                    <input type="text" id="input-url-generada" readonly
+                        style="flex: 1; padding: 0.5rem; border: 1px solid var(--line); border-radius: 4px; font-family: monospace; font-size: 0.85rem; background: white;">
+                    <button id="btn-copiar" class="btn-action"
+                        style="background: var(--primary); color: white; padding: 0.5rem 1rem;">Copiar</button>
+                </div>
+            </div>
+        </div>
+        <!-- Botones de Acción -->
+        <div class="admin-actions">
+            <button id="btn-exportar" class="btn-action">📊 Exportar a Excel</button>
+            <button id="btn-limpiar" class="btn-danger-global">Borrar Todos los Datos</button>
+        </div>
+
+        <!-- Tabla de Datos Responiva -->
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Invitado / Familia</th>
+                        <th>Asistencia</th>
+                        <th>Menú</th>
+                        <th>Alergias</th>
+                        <th>Vehículo (Tipo/Modelo)</th>
+                        <th>Patente</th>
+                        <th>Canción Sugerida</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-tbody">
+                    <!-- Se rellena dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+
+        <a href="index_4.html" class="parking-link">← Volver a la Invitación</a>
+    </div>
+
+    <!-- Script exclusivo de administración -->
+    <script src="config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="admin-script.js"></script>
+</body>
+
+</html>

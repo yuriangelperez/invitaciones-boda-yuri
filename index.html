@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Nos Casamos! - Y&W - Invitación</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,700;1,400&family=Montserrat:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- 1. BARRA DE NAVEGACIÓN -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#inicio" class="nav-logo">Y & W</a>
+            <ul class="nav-links">
+                <li><a href="#inicio">Inicio</a></li>
+                <li><a href="#historia">Historia</a></li>
+                <li><a href="#detalles">Detalles</a></li>
+                <li><a href="#dresscode">Dress Code</a></li>
+                <li><a href="#regalos">Regalos</a></li>
+                <li><a href="#confirmar">Confirmar</a></li>
+                <li><a href="#fotos">Fotos</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 2. PORTADA (SECCIÓN INICIO) -->
+    <header id="inicio" class="hero-wedding">
+        <div class="hero-content">
+            <h1 class="novios-names">Yuriangel & Williams</h1>
+            <p class="hero-date">06 de Septiembre de 2026 - 20:00 hs</p>
+            <p class="hero-place">Buenos Aires, Argentina</p>
+
+            <!-- Contador Regresivo -->
+            <div id="countdown" class="countdown-container">
+                <div class="time-box"><span id="days">00</span>
+                    <p>Días</p>
+                </div>
+                <div class="time-box"><span id="hours">00</span>
+                    <p>Horas</p>
+                </div>
+                <div class="time-box"><span id="minutes">00</span>
+                    <p>Minutos</p>
+                </div>
+                <div class="time-box"><span id="seconds">00</span>
+                    <p>Segundos</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 3. BIENVENIDA PERSONALIZADA -->
+    <section class="welcome-section">
+        <div class="container text-center">
+            <h2 id="welcome-title">¡Hola!</h2>
+            <p class="welcome-text">Estamos felices de compartir este momento con vos/ustedes.</p>
+            <div id="pases-container" class="pases-badge">
+                <span id="pases-cantidad">0</span> lugares reservados para vos
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. NUESTRA HISTORIA -->
+    <section id="historia" class="history-section container">
+        <h2 class="section-title">Nuestra Historia</h2>
+        <p class="section-subtitle">Un breve repaso de los momentos que nos trajeron hasta acá.</p>
+
+        <div class="history-grid">
+            <div class="history-item">
+                <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&q=80&w=500"
+                    alt="Momento 1">
+                <div class="overlay">
+                    <p>Donde todo empezó ❤️</p>
+                </div>
+            </div>
+            <div class="history-item">
+                <img src="https://images.unsplash.com/photo-1513279922550-250c2129b13a?auto=format&fit=crop&q=80&w=500"
+                    alt="Momento 2">
+                <div class="overlay">
+                    <p>Nuestro primer viaje ✈️</p>
+                </div>
+            </div>
+            <div class="history-item">
+                <img src="https://images.unsplash.com/photo-1494774157365-9e04c6722e47?auto=format&fit=crop&q=80&w=500"
+                    alt="Momento 3">
+                <div class="overlay">
+                    <p>El "¡Sí, quiero!" 💍</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. DETALLES DEL EVENTO -->
+    <section id="detalles" class="details-section">
+        <div class="container">
+            <h2 class="section-title">Detalles de la Fiesta</h2>
+
+            <div class="details-grid">
+                <!-- Bloque único: Fiesta -->
+                <div class="details-card">
+                    <div class="icon">🎉</div>
+                    <h3>Fiesta</h3>
+                    <p><strong>Hora:</strong> 19:00 hs</p>
+                    <p>Infinity Eventos SRL</p>
+                    <p>Corvalan 845, Martínez, Buenos Aires.</p>
+                    <div class="cronograma itinerario-central">
+                        <h4>Itinerario</h4>
+                        <div class="itinerario-tabla">
+                            <div class="itinerario-head">Hora</div>
+                            <div class="itinerario-head">Instancia</div>
+
+                            <div class="itinerario-hora">19:00</div>
+                            <div class="itinerario-evento">Recepción</div>
+
+                            <div class="itinerario-hora">20:20</div>
+                            <div class="itinerario-evento">Fin de recepción</div>
+
+                            <div class="itinerario-hora">20:30</div>
+                            <div class="itinerario-evento">Ingreso al salón</div>
+
+                            <div class="itinerario-hora">20:40</div>
+                            <div class="itinerario-evento">Entrada de novios</div>
+
+                            <div class="itinerario-hora">20:50</div>
+                            <div class="itinerario-evento">Vals y baile</div>
+
+                            <div class="itinerario-hora">21:10</div>
+                            <div class="itinerario-evento">Plato principal</div>
+
+                            <div class="itinerario-hora">22:10</div>
+                            <div class="itinerario-evento">Baile</div>
+
+                            <div class="itinerario-hora">22:50</div>
+                            <div class="itinerario-evento">Postre</div>
+
+                            <div class="itinerario-hora">23:20</div>
+                            <div class="itinerario-evento">Baile</div>
+
+                            <div class="itinerario-hora">00:00</div>
+                            <div class="itinerario-evento">Torta</div>
+
+                            <div class="itinerario-hora">00:20</div>
+                            <div class="itinerario-evento">Baile</div>
+
+                            <div class="itinerario-hora">01:00</div>
+                            <div class="itinerario-evento">Mesa de dulces</div>
+
+                            <div class="itinerario-hora">01:40</div>
+                            <div class="itinerario-evento">Baile</div>
+
+                            <div class="itinerario-hora">02:30</div>
+                            <div class="itinerario-evento">Pizza party</div>
+
+                            <div class="itinerario-hora">03:00</div>
+                            <div class="itinerario-evento">Final de fiesta</div>
+                        </div>
+                    </div>
+                    <a href="https://maps.app.goo.gl/9sBWqWXwqcy8ANC79" target="_blank" class="btn-action">Cómo
+                        llegar</a>
+                </div>
+            </div>
+
+            <!-- Mapa Integrado -->
+            <div class="map-container">
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3288.4822163455287!2d-58.5254812!3d-34.490657299999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bcb05b63fb1c1d%3A0xfe5c392c5cef58ef!2sCUB%2C%20Corvalan%20845%2C%20B1640%20Mart%C3%ADnez%2C%20Provincia%20de%20Buenos%20Aires!5e0!3m2!1ses!2sar!4v1783294242318!5m2!1ses!2sar"
+                    width="100%" height="350" style="border:0;" allowfullscreen="" loading="lazy"
+                    referrerpolicy="strict-origin-when-cross-origin"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. DRESS CODE -->
+    <section id="dresscode" class="dresscode-section container text-center">
+        <h2 class="section-title">Dress Code</h2>
+        <p class="dress-type">Elegante / Formal</p>
+        <p class="dress-fun">El blanco está reservado exclusivamente para la novia. ¡Muchas gracias! 😉</p>
+        <div class="palette-container">
+            <p>Sugerencia de paleta de colores:</p>
+            <div class="palette">
+                <div class="color-circle" style="background-color: #9dc1ff;"></div>
+                <div class="color-circle" style="background-color: #4a5568;"></div>
+                <div class="color-circle" style="background-color: #8c7863;"></div>
+                <div class="color-circle" style="background-color: #6a2736;"></div>
+                <div class="color-circle" style="background-color: #000000;"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. REGALOS -->
+    <section id="regalos" class="gifts-section">
+        <div class="container text-center">
+            <h2 class="section-title">Regalos</h2>
+            <p class="gifts-intro">Tu presencia es nuestro mejor regalo. Pero si querés ayudarnos con nuestra luna de
+                miel o a equipar nuestro hogar, podés hacerlo acá:</p>
+
+            <div class="bank-card">
+                <h3>Datos Bancarios</h3>
+                <p><strong>Banco:</strong> Naranja X</p>
+                <p><strong>Titular:</strong> Yuriangel Alexandra Del Carmen Perez Hernandez
+                </p>
+                <p><strong>CBU:</strong> 4530000800012182053468</p>
+                <p><strong>Alias:</strong> <span id="alias-text">boda.yuri.williams</span></p>
+                <button id="btn-copy" class="btn-action">Copiar Alias</button>
+                <span id="copy-toast" class="copy-toast">¡Copiado!</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. FORMULARIO RSVP (CONFIRMACIÓN) -->
+    <section id="confirmar" class="rsvp-section container">
+        <h2 class="section-title text-center">Confirmación de Asistencia</h2>
+        <p class="section-subtitle text-center">Por favor, avisanos si vas a poder venir antes del 15 de Agosto.</p>
+
+        <form id="rsvp-form" class="wedding-form">
+            <div class="form-group">
+                <label>¿Asistís?</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="asistencia" value="si" required> ¡Sí, contá conmigo!</label>
+                    <label><input type="radio" name="asistencia" value="no"> Lamentablemente no puedo</label>
+                </div>
+            </div>
+
+            <!-- CONTENEDOR DINÁMICO PARA NOMBRES Y MENÚS INDIVIDUALES -->
+            <div id="contenedor-nombres-dinamicos">
+                <!-- JS va a inyectar los bloques de nombre + menú acá adentro -->
+            </div>
+
+            <!-- SECCIÓN DE ESTACIONAMIENTO (Campos obligatorios solo si asisten con vehículo) -->
+            <div class="parking-section">
+                <h4>¿Venís en vehículo? 🚗</h4>
+                <p class="parking-info">Completá los datos para el ingreso a la seguridad del salón. Podés ver la
+                    ubicación exacta aquí: <a href="https://maps.app.goo.gl/1zx5SP46PCydcytZ6" target="_blank"
+                        class="parking-link">Link
+                        al Estacionamiento</a>.</p>
+
+                <div class="form-group">
+                    <label>Seleccioná una opción:</label>
+                    <div class="radio-group radio-inline">
+                        <label><input type="radio" name="viene-vehiculo" id="viene-vehiculo-si" value="si"> Sí, voy en
+                            vehículo</label>
+                        <label><input type="radio" name="viene-vehiculo" id="viene-vehiculo-no" value="no" checked> No,
+                            no voy en vehículo</label>
+                    </div>
+                </div>
+
+                <div id="vehiculo-campos" class="vehiculo-campos oculto">
+                    <div class="form-group">
+                        <label for="vehiculo-tipo">Tipo de vehículo:</label>
+                        <input type="text" id="vehiculo-tipo" placeholder="Ej: Auto, Camioneta, Moto">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="vehiculo-modelo">Modelo:</label>
+                        <input type="text" id="vehiculo-modelo" placeholder="Ej: Toyota Corolla, Ford Focus">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="vehiculo-patente">Patente / Dominio:</label>
+                        <input type="text" id="vehiculo-patente" placeholder="Ej: AA123BB / ABC123">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group playlist-group">
+                <label for="playlist">Sección Musical:</label>
+                <input type="text" id="playlist" placeholder="¿Qué canción no puede faltar en la playlist?">
+            </div>
+
+            <button type="submit" class="btn-submit">Enviar Confirmación</button>
+        </form>
+        <div id="form-message" class="hidden-message text-center"></div>
+    </section>
+
+    <!-- 9. ÁLBUM DE LOS INVITADOS -->
+    <section id="fotos" class="photos-section">
+        <div class="container text-center">
+            <h2 class="section-title">Álbum de los Invitados</h2>
+            <p>¡Ayudanos a capturar cada momento! Subí las fotos que saques durante la fiesta acá.</p>
+
+            <a href="https://photos.app.goo.gl/6xYnXGwdAjF4c8hGA" target="_blank" class="btn-large-wedding">Subir Fotos
+                al Álbum 📸</a>
+
+            <div class="qr-container">
+                <p>O escaneá el código QR en las mesas del salón:</p>
+                <div class="qr-placeholder">
+                    <img src="/files/qr-code.png" alt="Código QR para subir fotos al álbum" class="qr-image">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 10. PIE DE PÁGINA (FOOTER) -->
+    <footer class="wedding-footer">
+        <p class="footer-thanks">¡Gracias por ser parte de nuestra historia!</p>
+        <p class="footer-credits">Hecho con ❤️ por Yuri</p>
+    </footer>
+    <script src="config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js"></script>
+
+</body>
+
+</html>

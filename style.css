@@ -1,0 +1,523 @@
+/* RESET & ELEMENTOS BASE */
+:root {
+    --bg-main: #f7f1e8;
+    --bg-soft: #efe4d4;
+    --card: #fffdf9;
+    --text: #3e352d;
+    --muted: #6a5f54;
+    --primary: #7f5c45;
+    --primary-dark: #5f4332;
+    --accent: #b7895f;
+    --line: #e5d8c6;
+    --ok: #3f7d3a;
+    --error: #b74545;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background:
+        radial-gradient(circle at 10% 5%, rgba(255, 255, 255, 0.7), transparent 30%),
+        radial-gradient(circle at 90% 10%, rgba(215, 184, 148, 0.24), transparent 35%),
+        var(--bg-main);
+    color: var(--text);
+    line-height: 1.6;
+}
+
+.container {
+    width: 90%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 4rem 0;
+}
+
+.text-center { text-align: center; }
+.section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem;
+    color: var(--primary);
+    font-style: italic;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+.section-subtitle {
+    font-size: 1.1rem;
+    margin-bottom: 2.5rem;
+    opacity: 0.85;
+}
+
+/* 1. NAVBAR */
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: rgba(247, 241, 232, 0.86);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 10px 30px rgba(63, 43, 28, 0.08);
+    z-index: 1000;
+}
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 5%;
+}
+.nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    text-decoration: none;
+    color: var(--primary);
+}
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 1.5rem;
+}
+.nav-links a {
+    text-decoration: none;
+    color: var(--text);
+    font-size: 0.95rem;
+    transition: color 0.3s;
+}
+.nav-links a:hover { color: var(--primary); }
+
+/* Celulares (Menú responsivo básico) */
+@media (max-width: 768px) {
+    .nav-links { display: none; } /* Oculto para simplificar sin JS extra, o podés usar flex-direction column */
+}
+
+/* 2. PORTADA */
+.hero-wedding {
+    background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), 
+                url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1200') no-repeat center center/cover;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #ffffff;
+    padding-top: 60px;
+}
+.novios-names {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 4.5rem;
+    font-style: italic;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+.hero-date, .hero-place {
+    font-size: 1.3rem;
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+}
+
+/* CONTADOR REGRESIVO */
+.countdown-container {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2.5rem;
+}
+.time-box {
+    background-color: rgba(255, 255, 255, 0.9);
+    color: var(--text);
+    padding: 1rem;
+    border-radius: 8px;
+    min-width: 85px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+.time-box span {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--primary);
+    display: block;
+}
+.time-box p { font-size: 0.85rem; margin-top: 2px; }
+
+/* 3. BIENVENIDA PERSONALIZADA */
+.welcome-section {
+    background-color: var(--bg-soft);
+    border-bottom: 1px solid var(--line);
+}
+#welcome-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin-bottom: 1rem;
+}
+.welcome-text { font-size: 1.2rem; }
+.pases-badge {
+    display: inline-block;
+    margin-top: 1.5rem;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 20px;
+    font-size: 1rem;
+}
+
+/* 4. NUESTRA HISTORIA (CSS GRID & HOVER) */
+.history-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+.history-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    height: 300px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+.history-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+.overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(105, 76, 56, 0.86);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    padding: 1rem;
+    text-align: center;
+    font-size: 1.2rem;
+    font-style: italic;
+}
+.history-item:hover img { transform: scale(1.1); }
+.history-item:hover .overlay { opacity: 1; }
+
+/* 5. DETALLES DEL EVENTO */
+.details-section { background-color: #ffffff; }
+.details-grid {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-bottom: 3rem;
+}
+.details-card {
+    flex: 1;
+    min-width: 290px;
+    background: var(--card);
+    padding: 2.5rem;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid var(--line);
+    box-shadow: 0 14px 24px rgba(90, 66, 46, 0.07);
+}
+.details-card .icon { font-size: 2.5rem; margin-bottom: 1rem; }
+.details-card h3 {
+    color: var(--primary);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.7rem;
+    margin-bottom: 1rem;
+}
+.cronograma {
+    text-align: left;
+    margin: 1.5rem auto;
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    border: 1px solid var(--line);
+}
+.cronograma h4 {
+    margin-bottom: 1rem;
+    color: var(--primary);
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-size: 1.15rem;
+}
+.cronograma ul { list-style: none; }
+
+.itinerario-central {
+    max-width: 520px;
+    box-shadow: inset 0 0 0 1px rgba(127, 92, 69, 0.08);
+}
+
+.itinerario-tabla {
+    display: grid;
+    grid-template-columns: 92px minmax(0, 1fr);
+    justify-content: center;
+    gap: 0.55rem 1.2rem;
+    align-items: start;
+}
+
+.itinerario-head {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.25rem;
+    font-style: italic;
+    color: var(--primary-dark);
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 0.4rem;
+    margin-bottom: 0.25rem;
+}
+
+.itinerario-hora {
+    text-align: center;
+    color: var(--primary-dark);
+    font-weight: 600;
+}
+
+.itinerario-evento {
+    text-align: left;
+    color: var(--muted);
+}
+.btn-action {
+    display: inline-block;
+    background: linear-gradient(120deg, var(--primary), var(--accent));
+    color: white;
+    padding: 0.6rem 1.5rem;
+    text-decoration: none;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.95rem;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.btn-action:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 18px rgba(95, 67, 50, 0.22);
+}
+.map-container { border-radius: 12px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+
+/* 6. DRESS CODE */
+.dress-type {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    color: var(--primary);
+    margin: 1rem 0;
+}
+.dress-fun { font-style: italic; color: var(--error); }
+.palette-container { margin-top: 2rem; }
+.palette { display: flex; justify-content: center; gap: 1rem; margin-top: 1rem; }
+.color-circle { width: 50px; height: 50px; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+
+/* 7. REGALOS */
+.gifts-section { background-color: var(--bg-soft); }
+.gifts-intro { max-width: 600px; margin: 0 auto 2rem auto; }
+.bank-card {
+    background: white;
+    max-width: 450px;
+    margin: 0 auto;
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    position: relative;
+    box-shadow: 0 10px 25px rgba(90, 66, 46, 0.1);
+}
+.bank-card h3 {
+    margin-bottom: 1rem;
+    color: var(--primary);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+}
+.bank-card p { margin-bottom: 0.5rem; }
+.copy-toast {
+    display: none;
+    position: absolute;
+    bottom: 10px; left: 50%;
+    transform: translateX(-50%);
+    background: var(--ok);
+    color: white;
+    padding: 0.3rem 1rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+/* 8. FORMULARIO RSVP */
+.wedding-form {
+    max-width: 500px;
+    margin: 0 auto;
+    background: var(--card);
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 18px 28px rgba(90, 66, 46, 0.09);
+    border: 1px solid var(--line);
+}
+.form-group { margin-bottom: 1.5rem; }
+.form-group label { display: block; margin-bottom: 0.5rem; font-weight: bold; font-size: 0.95rem; }
+.form-group input[type="text"], .form-group select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #cfbda8;
+    border-radius: 8px;
+    font-family: inherit;
+    background-color: #fff;
+    transition: border-color 0.25s, box-shadow 0.25s;
+}
+.form-group input[type="text"]:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(183, 137, 95, 0.2);
+}
+.radio-group { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.5rem; }
+.radio-inline {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+.btn-submit {
+    width: 100%;
+    background: linear-gradient(120deg, var(--primary), var(--accent));
+    color: white;
+    border: none;
+    padding: 0.8rem; border-radius: 6px; font-family: inherit; font-size: 1rem; cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.btn-submit:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 18px rgba(95, 67, 50, 0.22);
+}
+.hidden-message { margin-top: 1.5rem; font-weight: bold; color: var(--ok); display: none; }
+
+.parking-section {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #f8efe4;
+    border: 1px solid #e6d7c4;
+    border-radius: 10px;
+}
+
+.parking-section h4 {
+    margin-bottom: 0.3rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.45rem;
+    color: var(--primary-dark);
+}
+
+.parking-info {
+    font-size: 0.92rem;
+    color: var(--muted);
+    margin-bottom: 1rem;
+}
+
+.parking-link {
+    color: var(--primary-dark);
+    font-weight: 600;
+}
+
+.vehiculo-campos {
+    max-height: 600px;
+    opacity: 1;
+    transform: translateY(0);
+    transition: max-height 0.28s ease, opacity 0.28s ease, transform 0.28s ease;
+}
+
+.vehiculo-campos.oculto {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-6px);
+}
+
+.playlist-group {
+    margin-top: 1.5rem;
+}
+
+/* 9. ÁLBUM INVITADOS */
+.photos-section { background-color: #ffffff; }
+.btn-large-wedding {
+    display: inline-block;
+    background: linear-gradient(130deg, #b28358, #8f6747);
+    color: white;
+    padding: 1.2rem 2.5rem;
+    text-decoration: none;
+    font-size: 1.2rem;
+    border-radius: 30px;
+    margin: 2rem 0;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+.btn-large-wedding:hover { transform: scale(1.05); }
+.qr-container { margin-top: 2rem; }
+.qr-placeholder {
+    margin: 1rem auto;
+    width: 150px; height: 150px;
+    background: #faf6f0;
+    border: 2px dashed var(--primary);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: var(--primary);
+    font-size: 0.8rem;
+}
+
+.qr-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* 10. FOOTER */
+.wedding-footer {
+    background-color: #3f342c;
+    color: white;
+    text-align: center;
+    padding: 3rem 0;
+}
+.footer-thanks { font-size: 1.4rem; font-style: italic; margin-bottom: 1rem; }
+.footer-credits { font-size: 0.85rem; opacity: 0.7; letter-spacing: 1px; }
+
+@media (max-width: 768px) {
+    .hero-wedding {
+        height: auto;
+        min-height: 100vh;
+        padding: 6rem 1rem 3rem;
+    }
+
+    .novios-names {
+        font-size: 3.2rem;
+    }
+
+    .hero-date,
+    .hero-place {
+        font-size: 1.05rem;
+        letter-spacing: 1px;
+    }
+
+    .countdown-container {
+        flex-wrap: wrap;
+    }
+
+    .time-box {
+        min-width: 72px;
+    }
+
+    .wedding-form {
+        padding: 1.5rem;
+    }
+
+    .itinerario-tabla {
+        grid-template-columns: 76px minmax(0, 1fr);
+        gap: 0.45rem 0.8rem;
+        font-size: 0.88rem;
+    }
+
+    .itinerario-head {
+        font-size: 1.05rem;
+    }
+}

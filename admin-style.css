@@ -1,0 +1,164 @@
+/* ==========================================
+   ESTILOS EXCLUSIVOS DEL PANEL ADMIN
+   ========================================== */
+
+body {
+    background: var(--bg-main) !important; /* Asegura mantener el fondo de la invitación */
+}
+
+.admin-container {
+    padding: 2rem 5%;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+
+.admin-container .section-title {
+    font-size: 3rem;    
+    margin-top: 1rem;
+}
+
+.admin-subtitle {
+    margin-bottom: 2rem;
+    color: var(--muted);
+}
+
+/* Grilla de métricas */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.metric-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    padding: 1.5rem;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(63, 43, 28, 0.02);
+}
+
+.metric-card h3 {
+    font-size: 0.85rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.5px;
+}
+
+.metric-card p {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--primary);
+}
+
+/* Acciones */
+.admin-actions {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn-danger-global {
+    background-color: var(--error);
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+}
+
+.btn-danger-global:hover {
+    background-color: #963535;
+}
+
+.btn-row-eliminar {
+    background: var(--error);
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+/* Tabla estructurada */
+.table-responsive {
+    overflow-x: auto;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    margin-bottom: 2rem;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+.admin-table th, 
+.admin-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--line);
+}
+
+.admin-table th {
+    background-color: var(--bg-soft);
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.admin-table tr:hover {
+    background-color: #faf6f0;
+}
+
+/* Estados visuales rápidos */
+.badge-status {
+    padding: 0.25rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.badge-si {
+    background-color: #e6f4ea;
+    color: var(--ok);
+}
+
+.badge-no {
+    background-color: #fce8e6;
+    color: var(--error);
+}
+
+/* Responsivo para pantallas chicas */
+@media (max-width: 768px) {
+    .admin-actions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+}
+
+/* Generador de enlaces */
+.generator-form input:focus {
+    outline: none;
+    border-color: var(--primary) !important;
+}
+
+#btn-copiar {
+    transition: opacity 0.2s;
+    cursor: pointer;
+}
+
+#btn-copiar:hover {
+    opacity: 0.9;
+}
