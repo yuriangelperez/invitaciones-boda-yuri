@@ -2,7 +2,20 @@
    SCRIPT COMPLETO - WEB DE BODAS
    ========================================== */
 
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const insertarAsistencias = async (filas) => {
+    const response = await fetch('/api/asistencias', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(filas)
+    });
+
+    if (!response.ok) {
+        const errorPayload = await response.json().catch(() => ({}));
+        throw new Error(errorPayload.error || 'No se pudo guardar la confirmacion.');
+    }
+};
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -59,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
             bloqueInvitado.innerHTML = `
                 <div class="form-group">
                     <label for="invitado-${i}">Nombre completo del invitado ${i + 1}:</label>
-                    <input type="text" id="invitado-${i}" class="input-invitado-confirmar" placeholder="Escribir nombre and apellido" required>
+                    <input type="text" id="invitado-${i}" class="input-invitado-confirmar" placeholder="Escribir nombre y apellido" required>
                 </div>
                 <div class="form-group">
                     <label for="menu-${i}">Preferencia alimenticia:</label>
@@ -213,9 +226,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (filasAInsertar.length === 0) return;
 
         try {
-            // Guardamos directamente en el cluster remoto de Supabase
-            const { error } = await supabaseClient.from('asistencias').insert(filasAInsertar);
-            if (error) throw error;
+            // Guardamos en API backend para no exponer llaves en frontend
+            await insertarAsistencias(filasAInsertar);
 
             // Construcción del mensaje para WhatsApp
             let textoWhatsapp = "";

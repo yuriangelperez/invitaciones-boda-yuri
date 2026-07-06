@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Administración - Boda C&M</title>
+    <title>Panel de Administracion - Boda Y&W</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -17,9 +17,20 @@
 
 <body>
 
-    <div class="admin-container">
+    <div id="admin-lock" class="admin-lock" aria-live="polite">
+        <form id="admin-login-form" class="admin-login-card">
+            <h2>Acceso Administrador</h2>
+            <p>Ingresá usuario y clave para ver el panel.</p>
+            <input type="text" id="admin-username-input" placeholder="Usuario" autocomplete="username" required>
+            <input type="password" id="admin-password-input" placeholder="Clave de administrador" required>
+            <button type="submit" class="btn-action">Ingresar</button>
+            <p id="admin-login-error" class="admin-login-error"></p>
+        </form>
+    </div>
+
+    <div class="admin-container admin-panel-hidden">
         <h1 class="section-title">Panel de Control</h1>
-        <p class="admin-subtitle">Lista global de confirmaciones de la boda de Clara y Mateo.</p>
+        <p class="admin-subtitle">Lista global de confirmaciones de la boda de Yuriangel y Williams.</p>
 
         <!-- Tarjetas de Métricas -->
         <div class="metrics-grid">
@@ -100,12 +111,10 @@
             </table>
         </div>
 
-        <a href="index_4.html" class="parking-link">← Volver a la Invitación</a>
+        <a href="https://invitaciones-boda-yuri.vercel.app/" class="parking-link">Volver a la Invitacion</a>
     </div>
 
     <!-- Script exclusivo de administración -->
-    <script src="config.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="admin-script.js"></script>
 </body>
 

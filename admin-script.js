@@ -2,11 +2,70 @@
    LOGICA EXCLUSIVA DEL PANEL ADMIN - SUPABASE
    ========================================== */
 
-// 🛠️ CONFIGURACIÓN DE SUPABASE (Poné exactamente las mismas llaves que en script.js)
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const apiRequest = async (url, options = {}) => {
+    const response = await fetch(url, options);
+    const payload = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+        throw new Error(payload.error || 'Error de servidor.');
+    }
+
+    return payload;
+};
 
 document.addEventListener('DOMContentLoaded', () => {
+    const BASE_INVITACION_URL = 'https://invitaciones-boda-yuri.vercel.app/';
+    const ADMIN_USERNAME = 'admin';
+    const ADMIN_PASSWORD = 'admin123';
+    const ADMIN_SESSION_KEY = 'admin_access_granted';
     const tbody = document.getElementById('admin-tbody');
+    const adminLock = document.getElementById('admin-lock');
+    const adminLoginForm = document.getElementById('admin-login-form');
+    const adminUsernameInput = document.getElementById('admin-username-input');
+    const adminPasswordInput = document.getElementById('admin-password-input');
+    const adminLoginError = document.getElementById('admin-login-error');
+    const adminContainer = document.querySelector('.admin-container');
+
+    const mostrarPanel = () => {
+        adminLock.style.display = 'none';
+        adminContainer.classList.remove('admin-panel-hidden');
+        cargarDatosAdministracion();
+    };
+
+    const bloquearPanel = () => {
+        adminLock.style.display = 'flex';
+        adminContainer.classList.add('admin-panel-hidden');
+    };
+
+    // Proteccion basica del panel (cliente): clave por pestana.
+    // Si queres cambiarla, modifica ADMIN_PASSWORD.
+    if (new URLSearchParams(window.location.search).get('logout') === '1') {
+        sessionStorage.removeItem(ADMIN_SESSION_KEY);
+    }
+
+    const yaAutorizado = sessionStorage.getItem(ADMIN_SESSION_KEY) === 'true';
+    if (yaAutorizado) {
+        mostrarPanel();
+    } else {
+        bloquearPanel();
+    }
+
+    adminLoginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const usernameIngresado = adminUsernameInput.value.trim().toLowerCase();
+        const passwordIngresada = adminPasswordInput.value;
+
+        if (usernameIngresado !== ADMIN_USERNAME || passwordIngresada !== ADMIN_PASSWORD) {
+            adminLoginError.innerText = 'Usuario o clave incorrectos. Intentalo nuevamente.';
+            adminPasswordInput.value = '';
+            adminUsernameInput.focus();
+            return;
+        }
+
+        adminLoginError.innerText = '';
+        sessionStorage.setItem(ADMIN_SESSION_KEY, 'true');
+        mostrarPanel();
+    });
 
     // Función encargada de traer los registros de la nube, renderizar y calcular métricas
     async function cargarDatosAdministracion() {
@@ -14,12 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         try {
             // Traemos todos los registros de la tabla ordenados por ID de manera descendente
-            const { data: asistencias, error } = await supabaseClient
-                .from('asistencias')
-                .select('*')
-                .order('id', { ascending: false });
-
-            if (error) throw error;
+            const { data: asistencias } = await apiRequest('/api/asistencias');
 
             tbody.innerHTML = '';
 
@@ -90,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const nombreFormateado = nombreVal.replace(/\s+/g, '_');
-            const urlBase = new URL('index.html', window.location.href);
+            const urlBase = new URL(BASE_INVITACION_URL);
             urlBase.searchParams.set('invitado', nombreFormateado);
             urlBase.searchParams.set('pases', pasesVal);
             const urlFinal = urlBase.toString();
@@ -123,12 +177,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 const rowId = e.target.getAttribute('data-id');
                 
                 if (confirm(`¿Estás seguro de que querés eliminar este registro de la base de datos?`)) {
-                    const { error } = await supabaseClient.from('asistencias').delete().eq('id', rowId);
-                    
-                    if (error) {
-                        alert("Error al intentar eliminar de la base de datos.");
-                    } else {
+                    try {
+                        await apiRequest(`/api/asistencias?id=${encodeURIComponent(rowId)}`, {
+                            method: 'DELETE'
+                        });
                         cargarDatosAdministracion();
+                    } catch (_) {
+                        alert("Error al intentar eliminar de la base de datos.");
                     }
                 }
             });
@@ -139,21 +194,29 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btn-limpiar').addEventListener('click', async () => {
         if (confirm('🚨 ¡ATENCIÓN! Esto eliminará permanentemente TODAS las confirmaciones guardadas en Supabase. ¿Querés continuar?')) {
             // Un delete sin condiciones restrictivas (o apuntando a IDs mayores a 0) vacía la tabla
-            const { error } = await supabaseClient.from('asistencias').delete().gt('id', 0);
-            
-            if (error) {
-                alert("No se pudieron limpiar todos los datos de forma remota.");
-            } else {
+            try {
+                await apiRequest('/api/asistencias?all=1', {
+                    method: 'DELETE'
+                });
                 cargarDatosAdministracion();
+            } catch (_) {
+                alert("No se pudieron limpiar todos los datos de forma remota.");
             }
         }
     });
 
     // --- EXPORTAR A EXCEL (CSV desde Supabase) ---
     document.getElementById('btn-exportar').addEventListener('click', async () => {
-        const { data: asistencias, error } = await supabaseClient.from('asistencias').select('*');
-        
-        if (error || !asistencias || asistencias.length === 0) {
+        let asistencias = [];
+        try {
+            const response = await apiRequest('/api/asistencias');
+            asistencias = response.data || [];
+        } catch (_) {
+            alert('No se pudo consultar la base de datos para exportar.');
+            return;
+        }
+
+        if (!asistencias || asistencias.length === 0) {
             alert('No hay ninguna confirmación registrada para exportar.');
             return;
         }
@@ -179,6 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.removeChild(link);
     });
 
-    // Carga inicial
-    cargarDatosAdministracion();
+    if (!yaAutorizado) {
+        adminUsernameInput.focus();
+    }
 });
