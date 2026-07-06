@@ -332,6 +332,15 @@ body {
     font-family: 'Cormorant Garamond', serif;
     font-size: 1.8rem;
 }
+.cash-gift-rhyme {
+    font-style: italic;
+    color: var(--primary-dark);
+    background: #f9f2e8;
+    border: 1px dashed #d7c3ac;
+    border-radius: 8px;
+    padding: 0.7rem;
+    margin-bottom: 1rem;
+}
 .bank-card p { margin-bottom: 0.5rem; }
 .copy-toast {
     display: none;
