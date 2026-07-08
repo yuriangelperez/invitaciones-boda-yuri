@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const ADMIN_PASSWORD = 'admin123';
     const ADMIN_SESSION_KEY = 'admin_access_granted';
     const tbody = document.getElementById('admin-tbody');
+    const playlistTbody = document.getElementById('admin-playlist-tbody');
     const adminLock = document.getElementById('admin-lock');
     const adminLoginForm = document.getElementById('admin-login-form');
     const adminUsernameInput = document.getElementById('admin-username-input');
@@ -29,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const mostrarPanel = () => {
         adminLock.style.display = 'none';
         adminContainer.classList.remove('admin-panel-hidden');
-        cargarDatosAdministracion();
+        cargarTodoAdministracion();
     };
 
     const bloquearPanel = () => {
@@ -66,6 +67,10 @@ document.addEventListener('DOMContentLoaded', () => {
         sessionStorage.setItem(ADMIN_SESSION_KEY, 'true');
         mostrarPanel();
     });
+
+    async function cargarTodoAdministracion() {
+        await Promise.all([cargarDatosAdministracion(), cargarPlaylistAdmin()]);
+    }
 
     // Función encargada de traer los registros de la nube, renderizar y calcular métricas
     async function cargarDatosAdministracion() {
@@ -122,6 +127,44 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) {
             console.error("Error al leer desde Supabase:", err);
             tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 2.5rem; color:var(--error);">Error al sincronizar con la base de datos.</td></tr>`;
+        }
+    }
+
+    async function cargarPlaylistAdmin() {
+        if (!playlistTbody) return;
+
+        playlistTbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 2.5rem; color:var(--muted);">Cargando playlist...</td></tr>`;
+
+        try {
+            const { data: playlist } = await apiRequest('/api/playlist');
+            playlistTbody.innerHTML = '';
+
+            if (!playlist || playlist.length === 0) {
+                playlistTbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 2.5rem; color:var(--muted);">No hay canciones sugeridas aún.</td></tr>`;
+                return;
+            }
+
+            playlist.forEach((item) => {
+                const fecha = item.created_at
+                    ? new Date(item.created_at).toLocaleString('es-AR')
+                    : '-';
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${item.cancion}</strong></td>
+                    <td>${item.cantante || '-'}</td>
+                    <td>${item.motivo || '-'}</td>
+                    <td>${fecha}</td>
+                    <td><button class="btn-row-eliminar-playlist" data-id="${item.id}">Eliminar</button></td>
+                `;
+
+                playlistTbody.appendChild(tr);
+            });
+
+            asignarEventosEliminarPlaylist();
+        } catch (err) {
+            console.error('Error al leer playlist:', err);
+            playlistTbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 2.5rem; color:var(--error);">Error al sincronizar playlist.</td></tr>`;
         }
     }
 
@@ -190,6 +233,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function asignarEventosEliminarPlaylist() {
+        document.querySelectorAll('.btn-row-eliminar-playlist').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                const rowId = e.target.getAttribute('data-id');
+
+                if (confirm('¿Querés eliminar esta canción de la playlist?')) {
+                    try {
+                        await apiRequest(`/api/playlist?id=${encodeURIComponent(rowId)}`, {
+                            method: 'DELETE'
+                        });
+                        cargarPlaylistAdmin();
+                    } catch (_) {
+                        alert('Error al eliminar la canción de la playlist.');
+                    }
+                }
+            });
+        });
+    }
+
     // Evento para purgar por completo la tabla remota
     document.getElementById('btn-limpiar').addEventListener('click', async () => {
         if (confirm('🚨 ¡ATENCIÓN! Esto eliminará permanentemente TODAS las confirmaciones guardadas en Supabase. ¿Querés continuar?')) {
@@ -204,6 +266,22 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
+
+    const btnLimpiarPlaylist = document.getElementById('btn-limpiar-playlist');
+    if (btnLimpiarPlaylist) {
+        btnLimpiarPlaylist.addEventListener('click', async () => {
+            if (confirm('🚨 Esto eliminará todas las canciones de la playlist. ¿Querés continuar?')) {
+                try {
+                    await apiRequest('/api/playlist?all=1', {
+                        method: 'DELETE'
+                    });
+                    cargarPlaylistAdmin();
+                } catch (_) {
+                    alert('No se pudieron limpiar las canciones de la playlist.');
+                }
+            }
+        });
+    }
 
     // --- EXPORTAR A EXCEL (CSV desde Supabase) ---
     document.getElementById('btn-exportar').addEventListener('click', async () => {
@@ -241,6 +319,45 @@ document.addEventListener('DOMContentLoaded', () => {
         link.click();
         document.body.removeChild(link);
     });
+
+    const btnExportarPlaylist = document.getElementById('btn-exportar-playlist');
+    if (btnExportarPlaylist) {
+        btnExportarPlaylist.addEventListener('click', async () => {
+            let playlist = [];
+            try {
+                const response = await apiRequest('/api/playlist');
+                playlist = response.data || [];
+            } catch (_) {
+                alert('No se pudo consultar la playlist para exportar.');
+                return;
+            }
+
+            if (!playlist || playlist.length === 0) {
+                alert('No hay canciones sugeridas para exportar.');
+                return;
+            }
+
+            let contenidoCSV = "\uFEFF";
+            contenidoCSV += "Cancion;Cantante;Motivo;Fecha\n";
+
+            playlist.forEach(item => {
+                const fecha = item.created_at ? new Date(item.created_at).toLocaleString('es-AR') : '-';
+                contenidoCSV += `"${item.cancion || '-'}";"${item.cantante || '-'}";"${item.motivo || '-'}";"${fecha}"\n`;
+            });
+
+            const blob = new Blob([contenidoCSV], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'playlist_boda_supabase.csv');
+            link.style.visibility = 'hidden';
+
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+    }
 
     if (!yaAutorizado) {
         adminUsernameInput.focus();

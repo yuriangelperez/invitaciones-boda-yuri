@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playlist de la Boda - Y&W</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,700;1,400&family=Montserrat:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="playlist-style.css">
+</head>
+
+<body>
+    <main class="playlist-page">
+        <section class="playlist-card">
+            <h1 class="section-title">Ayudanos con la playlist</h1>
+            <p class="playlist-subtitle">Queremos bailar tus canciones favoritas en nuestra fiesta.</p>
+
+            <form id="playlist-form" class="wedding-form">
+                <div class="form-group">
+                    <label for="cancion">Nombre de la canción:</label>
+                    <input type="text" id="cancion" name="cancion" placeholder="Ej: Vivir Mi Vida" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="cantante">Cantante (opcional):</label>
+                    <input type="text" id="cantante" name="cantante" placeholder="Ej: Marc Anthony">
+                </div>
+
+                <div class="form-group">
+                    <label for="motivo">¿Por qué? (opcional):</label>
+                    <input type="text" id="motivo" name="motivo" placeholder="Ej: Es ideal para abrir la pista">
+                </div>
+
+                <button type="submit" class="btn-submit">Enviar sugerencia</button>
+            </form>
+
+            <p id="playlist-message" class="playlist-message" aria-live="polite"></p>
+
+            <a href="index.html" class="playlist-back-link">Volver a la invitación</a>
+        </section>
+    </main>
+
+    <script src="playlist-script.js"></script>
+</body>
+
+</html>

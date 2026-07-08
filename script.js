@@ -63,6 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
         contenedorNombres.innerHTML = '';
 
         for (let i = 0; i < pasesParam; i++) {
+            const esPrimerInvitado = i === 0;
             const bloqueInvitado = document.createElement('div');
             bloqueInvitado.className = 'bloque-invitado-dinamico';
             bloqueInvitado.style.borderBottom = "1px dashed #eae1d4";
@@ -71,8 +72,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             bloqueInvitado.innerHTML = `
                 <div class="form-group">
-                    <label for="invitado-${i}">Nombre completo del invitado ${i + 1}:</label>
-                    <input type="text" id="invitado-${i}" class="input-invitado-confirmar" placeholder="Escribir nombre y apellido" required>
+                    <label for="invitado-${i}">Nombre completo del invitado ${i + 1}${esPrimerInvitado ? ' (obligatorio)' : ' (opcional)'}:</label>
+                    <input type="text" id="invitado-${i}" class="input-invitado-confirmar" placeholder="Escribir nombre y apellido" ${esPrimerInvitado ? 'required' : ''}>
                 </div>
                 <div class="form-group">
                     <label for="menu-${i}">Preferencia alimenticia:</label>
@@ -177,7 +178,6 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
 
         const asistencia = document.querySelector('input[name="asistencia"]:checked')?.value;
-        const playlist = document.getElementById('playlist').value.trim();
         const vieneVehiculo = vieneVehiculoSi.checked;
 
         const vTipo = vehiculoTipo.value.trim();
@@ -207,8 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     alergia: asistencia === 'si' ? alergia : '-',
                     vehiculo_tipo: (asistencia === 'si' && vieneVehiculo) ? vTipo : '',
                     vehiculo_modelo: (asistencia === 'si' && vieneVehiculo) ? vModelo : '',
-                    vehiculo_patente: (asistencia === 'si' && vieneVehiculo) ? vPatente : '',
-                    playlist: playlist
+                    vehiculo_patente: (asistencia === 'si' && vieneVehiculo) ? vPatente : ''
                 });
 
                 let infoInvitado = `${nombre} (${menu})`;
@@ -243,9 +242,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     textoWhatsapp += `   Patente: ${vPatente}\n\n`;
                 }
 
-                if (playlist) {
-                    textoWhatsapp += `*Sugerencia de música:* "${playlist}"\n`;
-                }
             } else {
                 textoWhatsapp += `*Aviso de Ausencia*\n\n`;
                 textoWhatsapp += `*Invitados que no pueden asistir:*\n${detalleMsgWhatsapp}\n`;

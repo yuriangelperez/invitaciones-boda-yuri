@@ -354,6 +354,19 @@ body {
     font-size: 0.8rem;
 }
 
+/* 8. SECCION PLAYLIST */
+.playlist-help-section {
+    background:
+        radial-gradient(circle at 85% 10%, rgba(183, 137, 95, 0.16), transparent 35%),
+        linear-gradient(180deg, #fffdf8 0%, #f3e9db 100%);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+}
+
+.playlist-help-section .section-subtitle {
+    margin-bottom: 1.5rem;
+}
+
 /* 8. FORMULARIO RSVP */
 .wedding-form {
     max-width: 500px;
@@ -439,10 +452,6 @@ body {
     overflow: hidden;
     opacity: 0;
     transform: translateY(-6px);
-}
-
-.playlist-group {
-    margin-top: 1.5rem;
 }
 
 /* 9. ÁLBUM INVITADOS */

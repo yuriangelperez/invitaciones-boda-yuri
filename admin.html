@@ -87,6 +87,8 @@
         <!-- Botones de Acción -->
         <div class="admin-actions">
             <button id="btn-exportar" class="btn-action">📊 Exportar a Excel</button>
+            <button id="btn-exportar-playlist" class="btn-action">🎵 Exportar Playlist</button>
+            <button id="btn-limpiar-playlist" class="btn-danger-global">Borrar Playlist</button>
             <button id="btn-limpiar" class="btn-danger-global">Borrar Todos los Datos</button>
         </div>
 
@@ -106,6 +108,24 @@
                     </tr>
                 </thead>
                 <tbody id="admin-tbody">
+                    <!-- Se rellena dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+
+        <h2 class="section-title" style="font-size: 2.2rem; margin-top: 1rem;">Playlist Sugerida</h2>
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Canción</th>
+                        <th>Cantante</th>
+                        <th>Motivo</th>
+                        <th>Fecha</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-playlist-tbody">
                     <!-- Se rellena dinámicamente -->
                 </tbody>
             </table>
