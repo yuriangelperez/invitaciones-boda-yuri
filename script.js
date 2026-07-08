@@ -32,6 +32,17 @@ const insertarPlaylist = async (payload) => {
     }
 };
 
+const parsearCancionArtista = (entrada) => {
+    const partes = entrada.split(/\s+-\s+/);
+    const cancion = (partes.shift() || '').trim();
+    const cantante = partes.join(' - ').trim();
+
+    return {
+        cancion,
+        cantante: cantante || null
+    };
+};
+
 document.addEventListener('DOMContentLoaded', () => {
 
     // --- 1. CUENTA REGRESIVA ---
@@ -255,7 +266,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const motivoBase = `Sugerida en confirmacion RSVP por ${invitadoReferencia} (${asistencia === 'si' ? 'asiste' : 'no asiste'})`;
 
                 await Promise.all(
-                    canciones.map((cancion) => insertarPlaylist({ cancion, motivo: motivoBase }))
+                    canciones.map((entrada) => {
+                        const { cancion, cantante } = parsearCancionArtista(entrada);
+                        return insertarPlaylist({ cancion, cantante, motivo: motivoBase });
+                    })
                 );
             }
 
