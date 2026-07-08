@@ -454,6 +454,10 @@ body {
     transform: translateY(-6px);
 }
 
+.playlist-group {
+    margin-top: 1.5rem;
+}
+
 /* 9. ÁLBUM INVITADOS */
 .photos-section { background-color: #ffffff; }
 .btn-large-wedding {

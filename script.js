@@ -17,6 +17,21 @@ const insertarAsistencias = async (filas) => {
     }
 };
 
+const insertarPlaylist = async (payload) => {
+    const response = await fetch('/api/playlist', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+        const errorPayload = await response.json().catch(() => ({}));
+        throw new Error(errorPayload.error || 'No se pudo guardar la sugerencia de playlist.');
+    }
+};
+
 document.addEventListener('DOMContentLoaded', () => {
 
     // --- 1. CUENTA REGRESIVA ---
@@ -178,6 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
 
         const asistencia = document.querySelector('input[name="asistencia"]:checked')?.value;
+        const playlist = document.getElementById('playlist').value.trim();
         const vieneVehiculo = vieneVehiculoSi.checked;
 
         const vTipo = vehiculoTipo.value.trim();
@@ -207,7 +223,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     alergia: asistencia === 'si' ? alergia : '-',
                     vehiculo_tipo: (asistencia === 'si' && vieneVehiculo) ? vTipo : '',
                     vehiculo_modelo: (asistencia === 'si' && vieneVehiculo) ? vModelo : '',
-                    vehiculo_patente: (asistencia === 'si' && vieneVehiculo) ? vPatente : ''
+                    vehiculo_patente: (asistencia === 'si' && vieneVehiculo) ? vPatente : '',
+                    playlist: playlist
                 });
 
                 let infoInvitado = `${nombre} (${menu})`;
@@ -228,6 +245,20 @@ document.addEventListener('DOMContentLoaded', () => {
             // Guardamos en API backend para no exponer llaves en frontend
             await insertarAsistencias(filasAInsertar);
 
+            if (playlist) {
+                const canciones = playlist
+                    .split(',')
+                    .map((cancion) => cancion.trim())
+                    .filter(Boolean);
+
+                const invitadoReferencia = filasAInsertar[0]?.nombre || 'invitado';
+                const motivoBase = `Sugerida en confirmacion RSVP por ${invitadoReferencia} (${asistencia === 'si' ? 'asiste' : 'no asiste'})`;
+
+                await Promise.all(
+                    canciones.map((cancion) => insertarPlaylist({ cancion, motivo: motivoBase }))
+                );
+            }
+
             // Construcción del mensaje para WhatsApp
             let textoWhatsapp = "";
 
@@ -242,9 +273,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     textoWhatsapp += `   Patente: ${vPatente}\n\n`;
                 }
 
+                if (playlist) {
+                    textoWhatsapp += `*Sugerencias de playlist:* ${playlist}\n`;
+                }
+
             } else {
                 textoWhatsapp += `*Aviso de Ausencia*\n\n`;
                 textoWhatsapp += `*Invitados que no pueden asistir:*\n${detalleMsgWhatsapp}\n`;
+
+                if (playlist) {
+                    textoWhatsapp += `*Sugerencias de playlist:* ${playlist}\n\n`;
+                }
+
                 textoWhatsapp += `¡Los vamos a extrañar!`;
             }
 

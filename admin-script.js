@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Función encargada de traer los registros de la nube, renderizar y calcular métricas
     async function cargarDatosAdministracion() {
-        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 2.5rem; color:var(--muted);">Cargando confirmaciones desde Supabase...</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding: 2.5rem; color:var(--muted);">Cargando confirmaciones desde Supabase...</td></tr>`;
         
         try {
             // Traemos todos los registros de la tabla ordenados por ID de manera descendente
@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
             let totalVehiculos = 0;
 
             if (totalRespuestas === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 2.5rem; color:var(--muted);">No hay confirmaciones registradas aún.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding: 2.5rem; color:var(--muted);">No hay confirmaciones registradas aún.</td></tr>`;
             }
 
             asistencias.forEach((item) => {
@@ -102,6 +102,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 const tr = document.createElement('tr');
+                const fechaConfirmacion = item.created_at
+                    ? new Date(item.created_at).toLocaleString('es-AR')
+                    : '-';
                 tr.innerHTML = `
                     <td><strong>${item.nombre}</strong></td>
                     <td><span class="badge-status ${item.asistencia === 'si' ? 'badge-si' : 'badge-no'}">${item.asistencia.toUpperCase()}</span></td>
@@ -109,6 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td style="color: ${item.alergia && item.alergia !== '-' ? 'var(--error)' : 'inherit'}; font-weight: ${item.alergia && item.alergia !== '-' ? '600' : 'normal'}">${item.alergia || '-'}</td>
                     <td>${item.vehiculo_tipo ? `${item.vehiculo_tipo} ${item.vehiculo_modelo}` : '-'}</td>
                     <td><code>${item.vehiculo_patente || '-'}</code></td>
+                    <td>${fechaConfirmacion}</td>
                     <td><em>${item.playlist || '-'}</em></td>
                     <td><button class="btn-row-eliminar" data-id="${item.id}">Eliminar</button></td>
                 `;
@@ -126,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (err) {
             console.error("Error al leer desde Supabase:", err);
-            tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 2.5rem; color:var(--error);">Error al sincronizar con la base de datos.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding: 2.5rem; color:var(--error);">Error al sincronizar con la base de datos.</td></tr>`;
         }
     }
 
@@ -300,11 +304,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         let contenidoCSV = "\uFEFF";
-        contenidoCSV += "Invitado/Familia;Asistencia;Menú Seleccionado;Alergias Declaradas;Vehículo;Patente/Dominio;Canción Sugerida\n";
+        contenidoCSV += "Invitado/Familia;Asistencia;Menú Seleccionado;Alergias Declaradas;Vehículo;Patente/Dominio;Fecha Confirmación;Canción Sugerida\n";
 
         asistencias.forEach(item => {
             const vehiculoInfo = item.vehiculo_tipo ? `${item.vehiculo_tipo} ${item.vehiculo_modelo}` : '-';
-            contenidoCSV += `"${item.nombre}";"${item.asistencia.toUpperCase()}";"${item.menu || '-'}";"${item.alergia || '-'}";"${vehiculoInfo}";"${item.vehiculo_patente || '-'}";"${item.playlist || '-'}"\n`;
+            const fechaConfirmacion = item.created_at ? new Date(item.created_at).toLocaleString('es-AR') : '-';
+            contenidoCSV += `"${item.nombre}";"${item.asistencia.toUpperCase()}";"${item.menu || '-'}";"${item.alergia || '-'}";"${vehiculoInfo}";"${item.vehiculo_patente || '-'}";"${fechaConfirmacion}";"${item.playlist || '-'}"\n`;
         });
 
         const blob = new Blob([contenidoCSV], { type: 'text/csv;charset=utf-8;' });
