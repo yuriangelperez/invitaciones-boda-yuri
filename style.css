@@ -263,7 +263,7 @@ body {
 
 @media (max-width: 768px) {
     .history-section {
-        width: 80%;
+        width: 100%;
         max-width: none;
     }
 
@@ -279,7 +279,7 @@ body {
 
     .history-item {
         flex-basis: 78vw;
-        height: 550px;
+        height: 450px;
     }
 }
 
