@@ -308,7 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Feedback visual exitoso
             if (asistencia === 'si') {
-                messageDiv.innerText = `¡Excelente! Confirmamos en la base de datos a: ${resumenInvitados.join(', ')}. Redirigiendo a WhatsApp...`;
+                messageDiv.innerText = `¡Excelente! Confirmamos en la lista a: ${resumenInvitados.join(', ')}. Redirigiendo a WhatsApp...`;
                 messageDiv.style.color = '#4b8b3b';
             } else {
                 messageDiv.innerText = `Gracias por avisarnos. Redirigiendo a WhatsApp para enviar tu mensaje...`;
