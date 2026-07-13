@@ -194,7 +194,7 @@ body {
 }
 
 .history-carousel.is-dragging .history-track {
-    animation-play-state: paused;
+    cursor: grabbing;
 }
 
 .history-carousel::before,
@@ -214,7 +214,6 @@ body {
     display: flex;
     gap: 1.5rem;
     width: max-content;
-    animation: history-slide 38s linear infinite;
 }
 
 .history-item {
@@ -252,15 +251,6 @@ body {
 .history-item:hover img { transform: scale(1.1); }
 .history-item:hover .overlay { opacity: 1; }
 
-@keyframes history-slide {
-    from {
-        transform: translateX(0);
-    }
-    to {
-        transform: translateX(calc(-50% - 0.75rem));
-    }
-}
-
 @media (max-width: 1200px) {
     .history-section {
         width: 92%;
@@ -276,7 +266,6 @@ body {
 
     .history-track {
         gap: 1rem;
-        animation-duration: 28s;
     }
 
     .history-item {

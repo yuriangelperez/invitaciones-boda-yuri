@@ -343,10 +343,47 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 6. CARRUSEL: SWIPE/DRAG EN TOUCH Y ESCRITORIO ---
     const historyCarousel = document.querySelector('.history-carousel');
-    if (historyCarousel) {
+    const historyTrack = historyCarousel?.querySelector('.history-track');
+    if (historyCarousel && historyTrack) {
         let isPointerDown = false;
         let startX = 0;
         let startScrollLeft = 0;
+        let rafId = null;
+        let lastFrameTime = 0;
+        const autoplaySpeed = window.matchMedia('(max-width: 768px)').matches ? 24 : 34;
+
+        const getLoopWidth = () => historyTrack.scrollWidth / 2;
+
+        const normalizeLoopPosition = () => {
+            const loopWidth = getLoopWidth();
+            if (!loopWidth) {
+                return;
+            }
+
+            if (historyCarousel.scrollLeft >= loopWidth) {
+                historyCarousel.scrollLeft -= loopWidth;
+            } else if (historyCarousel.scrollLeft < 0) {
+                historyCarousel.scrollLeft += loopWidth;
+            }
+        };
+
+        const autoScroll = (time) => {
+            if (!lastFrameTime) {
+                lastFrameTime = time;
+            }
+
+            const deltaSeconds = (time - lastFrameTime) / 1000;
+            lastFrameTime = time;
+
+            if (!isPointerDown) {
+                historyCarousel.scrollLeft += autoplaySpeed * deltaSeconds;
+                normalizeLoopPosition();
+            }
+
+            rafId = window.requestAnimationFrame(autoScroll);
+        };
+
+        rafId = window.requestAnimationFrame(autoScroll);
 
         historyCarousel.addEventListener('pointerdown', (event) => {
             if (event.pointerType === 'mouse' && event.button !== 0) {
@@ -358,6 +395,7 @@ document.addEventListener('DOMContentLoaded', () => {
             startScrollLeft = historyCarousel.scrollLeft;
             historyCarousel.classList.add('is-dragging');
             historyCarousel.setPointerCapture(event.pointerId);
+            lastFrameTime = 0;
         });
 
         historyCarousel.addEventListener('pointermove', (event) => {
@@ -367,6 +405,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const deltaX = event.clientX - startX;
             historyCarousel.scrollLeft = startScrollLeft - deltaX;
+            normalizeLoopPosition();
             event.preventDefault();
         }, { passive: false });
 
@@ -381,11 +420,20 @@ document.addEventListener('DOMContentLoaded', () => {
             if (event.pointerId !== undefined && historyCarousel.hasPointerCapture(event.pointerId)) {
                 historyCarousel.releasePointerCapture(event.pointerId);
             }
+
+            lastFrameTime = 0;
         };
 
         historyCarousel.addEventListener('pointerup', stopDragging);
         historyCarousel.addEventListener('pointercancel', stopDragging);
-        historyCarousel.addEventListener('pointerleave', stopDragging);
+        historyCarousel.addEventListener('lostpointercapture', stopDragging);
+
+        window.addEventListener('resize', normalizeLoopPosition);
+        window.addEventListener('beforeunload', () => {
+            if (rafId) {
+                window.cancelAnimationFrame(rafId);
+            }
+        });
     }
 
 });
