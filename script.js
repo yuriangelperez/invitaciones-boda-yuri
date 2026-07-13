@@ -399,23 +399,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const getItemCenter = (item) => item.offsetLeft + (item.offsetWidth / 2);
 
-        const wrapToLoop = (value) => {
-            const loopWidth = getLoopWidth();
-            if (!loopWidth) {
-                return value;
-            }
-
-            if (value >= loopWidth) {
-                return value - loopWidth;
-            }
-
-            if (value < 0) {
-                return value + loopWidth;
-            }
-
-            return value;
-        };
-
         const getNearestRealIndex = () => {
             if (!logicalItemsCount || allHistoryItems.length === 0) {
                 return 0;
@@ -459,7 +442,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            const targetLeft = wrapToLoop(getItemCenter(bestItem) - (historyCarousel.clientWidth / 2));
+            const loopWidth = getLoopWidth();
+            const baseTargetLeft = getItemCenter(bestItem) - (historyCarousel.clientWidth / 2);
+            const candidateTargets = [
+                baseTargetLeft - loopWidth,
+                baseTargetLeft,
+                baseTargetLeft + loopWidth
+            ];
+
+            let targetLeft = candidateTargets[0];
+            let bestDistanceToCurrent = Math.abs(candidateTargets[0] - historyCarousel.scrollLeft);
+
+            candidateTargets.forEach((candidate) => {
+                const distance = Math.abs(candidate - historyCarousel.scrollLeft);
+                if (distance < bestDistanceToCurrent) {
+                    bestDistanceToCurrent = distance;
+                    targetLeft = candidate;
+                }
+            });
+
             manualPauseUntil = performance.now() + 900;
             historyCarousel.scrollTo({
                 left: targetLeft,
@@ -496,7 +497,9 @@ document.addEventListener('DOMContentLoaded', () => {
             startScrollLeft = historyCarousel.scrollLeft;
             touchStartScrollLeft = historyCarousel.scrollLeft;
             draggedDistance = 0;
-            historyCarousel.classList.add('is-dragging');
+            if (isMouseDragging) {
+                historyCarousel.classList.add('is-dragging');
+            }
 
             if (isMouseDragging) {
                 historyCarousel.setPointerCapture(event.pointerId);
@@ -525,7 +528,9 @@ document.addEventListener('DOMContentLoaded', () => {
             isPointerDown = false;
             const wasMouseDragging = isMouseDragging;
             isMouseDragging = false;
-            historyCarousel.classList.remove('is-dragging');
+            if (wasMouseDragging) {
+                historyCarousel.classList.remove('is-dragging');
+            }
 
             if (wasMouseDragging && event.pointerId !== undefined && historyCarousel.hasPointerCapture(event.pointerId)) {
                 historyCarousel.releasePointerCapture(event.pointerId);
@@ -587,6 +592,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         if (logicalItemsCount) {
+            const loopWidth = getLoopWidth();
+            if (loopWidth > 0) {
+                historyCarousel.scrollLeft = loopWidth;
+            }
+
             centerByLogicalIndex(0);
             setActiveSegment(0);
         }

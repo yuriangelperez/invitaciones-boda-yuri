@@ -339,6 +339,7 @@ body {
     text-align: center;
     font-size: 1.2rem;
     font-style: italic;
+    pointer-events: none;
 }
 
 .history-item.is-active img {
