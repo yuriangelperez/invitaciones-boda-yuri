@@ -463,12 +463,12 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         const setActiveItem = (logicalIndex) => {
-            if (!realHistoryItems.length) {
+            if (!allHistoryItems.length || !logicalItemsCount) {
                 return;
             }
 
-            realHistoryItems.forEach((item, index) => {
-                item.classList.toggle('is-active', index === logicalIndex);
+            allHistoryItems.forEach((item, index) => {
+                item.classList.toggle('is-active', (index % logicalItemsCount) === logicalIndex);
             });
         };
 
@@ -554,18 +554,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
         historyCarousel.addEventListener('scroll', syncSegmentsWithViewport, { passive: true });
 
-        realHistoryItems.forEach((item, index) => {
+        allHistoryItems.forEach((item, index) => {
             item.addEventListener('click', () => {
                 if (performance.now() < suppressItemClickUntil) {
                     return;
                 }
 
+                const logicalIndex = index % logicalItemsCount;
+
                 const willActivate = !item.classList.contains('is-active');
-                realHistoryItems.forEach((historyItem) => historyItem.classList.remove('is-active'));
+                allHistoryItems.forEach((historyItem) => historyItem.classList.remove('is-active'));
 
                 if (willActivate) {
-                    item.classList.add('is-active');
-                    setActiveSegment(index);
+                    setActiveItem(logicalIndex);
+                    setActiveSegment(logicalIndex);
                 }
             });
         });
