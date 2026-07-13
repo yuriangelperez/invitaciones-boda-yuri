@@ -197,6 +197,46 @@ body {
     cursor: grabbing;
 }
 
+.history-carousel.is-dragging .history-item img {
+    transform: none;
+}
+
+.history-carousel.is-dragging .overlay {
+    opacity: 0;
+}
+
+.history-control {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.85);
+    color: var(--primary-dark);
+    font-size: 1.9rem;
+    line-height: 1;
+    cursor: pointer;
+    z-index: 3;
+    box-shadow: 0 8px 18px rgba(62, 43, 29, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.history-control:hover {
+    background: #ffffff;
+}
+
+.history-control.prev {
+    left: 0.4rem;
+}
+
+.history-control.next {
+    right: 0.4rem;
+}
+
 .history-carousel::before,
 .history-carousel::after {
     content: none;
@@ -272,15 +312,11 @@ body {
         flex-basis: 78vw;
         height: 450px;
     }
-}
 
-@media (hover: none) and (pointer: coarse) {
-    .history-carousel {
-        scroll-snap-type: x mandatory;
-    }
-
-    .history-item {
-        scroll-snap-align: center;
+    .history-control {
+        width: 38px;
+        height: 38px;
+        font-size: 1.5rem;
     }
 }
 

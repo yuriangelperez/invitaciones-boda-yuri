@@ -345,11 +345,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const historyCarousel = document.querySelector('.history-carousel');
     const historyTrack = historyCarousel?.querySelector('.history-track');
     if (historyCarousel && historyTrack) {
+        const prevControl = historyCarousel.querySelector('.history-control.prev');
+        const nextControl = historyCarousel.querySelector('.history-control.next');
         let isPointerDown = false;
         let startX = 0;
         let startScrollLeft = 0;
         let rafId = null;
         let lastFrameTime = 0;
+        let manualPauseUntil = 0;
         const autoplaySpeed = window.matchMedia('(max-width: 768px)').matches ? 24 : 34;
 
         const getLoopWidth = () => historyTrack.scrollWidth / 2;
@@ -375,7 +378,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const deltaSeconds = (time - lastFrameTime) / 1000;
             lastFrameTime = time;
 
-            if (!isPointerDown) {
+            if (!isPointerDown && time >= manualPauseUntil) {
                 historyCarousel.scrollLeft += autoplaySpeed * deltaSeconds;
                 normalizeLoopPosition();
             }
@@ -384,6 +387,25 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         rafId = window.requestAnimationFrame(autoScroll);
+
+        const getStepSize = () => {
+            const firstItem = historyTrack.querySelector('.history-item');
+            if (!firstItem) {
+                return historyCarousel.clientWidth * 0.8;
+            }
+
+            const trackStyles = window.getComputedStyle(historyTrack);
+            const gap = parseFloat(trackStyles.gap || 0);
+            return firstItem.getBoundingClientRect().width + gap;
+        };
+
+        const moveByStep = (direction) => {
+            const step = getStepSize();
+            manualPauseUntil = performance.now() + 900;
+            historyCarousel.scrollLeft += step * direction;
+            normalizeLoopPosition();
+            lastFrameTime = 0;
+        };
 
         historyCarousel.addEventListener('pointerdown', (event) => {
             if (event.pointerType === 'mouse' && event.button !== 0) {
@@ -427,6 +449,14 @@ document.addEventListener('DOMContentLoaded', () => {
         historyCarousel.addEventListener('pointerup', stopDragging);
         historyCarousel.addEventListener('pointercancel', stopDragging);
         historyCarousel.addEventListener('lostpointercapture', stopDragging);
+
+        if (prevControl) {
+            prevControl.addEventListener('click', () => moveByStep(-1));
+        }
+
+        if (nextControl) {
+            nextControl.addEventListener('click', () => moveByStep(1));
+        }
 
         window.addEventListener('resize', normalizeLoopPosition);
         window.addEventListener('beforeunload', () => {
