@@ -346,8 +346,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const historyCarousel = historyShell?.querySelector('.history-carousel');
     const historyTrack = historyCarousel?.querySelector('.history-track');
     if (historyCarousel && historyTrack) {
-        const prevControl = historyShell.querySelector('.history-control.prev');
-        const nextControl = historyShell.querySelector('.history-control.next');
+        const historySlider = historyShell.querySelector('.history-slider');
         const allHistoryItems = Array.from(historyTrack.querySelectorAll('.history-item'));
         const historyItems = historyTrack.querySelectorAll('.history-item:not([aria-hidden="true"])');
         const logicalItemsCount = historyItems.length;
@@ -465,7 +464,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 behavior: 'smooth'
             });
             lastFrameTime = 0;
+
+            if (historySlider) {
+                historySlider.value = String(logicalIndex);
+            }
         };
+
+        if (historySlider) {
+            historySlider.max = String(Math.max(logicalItemsCount - 1, 0));
+        }
 
         historyCarousel.addEventListener('pointerdown', (event) => {
             if (event.pointerType === 'mouse' && event.button !== 0) {
@@ -516,21 +523,29 @@ document.addEventListener('DOMContentLoaded', () => {
         historyCarousel.addEventListener('pointercancel', stopDragging);
         historyCarousel.addEventListener('lostpointercapture', stopDragging);
 
-        if (prevControl) {
-            prevControl.addEventListener('click', () => {
-                const currentIndex = getNearestRealIndex();
-                const nextIndex = (currentIndex - 1 + logicalItemsCount) % logicalItemsCount;
-                centerByLogicalIndex(nextIndex);
-            });
+        if (historySlider) {
+            const onSliderChange = () => {
+                const targetIndex = parseInt(historySlider.value, 10) || 0;
+                centerByLogicalIndex(targetIndex);
+            };
+
+            historySlider.addEventListener('input', onSliderChange);
+            historySlider.addEventListener('change', onSliderChange);
         }
 
-        if (nextControl) {
-            nextControl.addEventListener('click', () => {
-                const currentIndex = getNearestRealIndex();
-                const nextIndex = (currentIndex + 1) % logicalItemsCount;
-                centerByLogicalIndex(nextIndex);
-            });
-        }
+        let rafSyncCounter = 0;
+        const syncSliderWithViewport = () => {
+            if (!historySlider || !logicalItemsCount) {
+                return;
+            }
+
+            rafSyncCounter += 1;
+            if (rafSyncCounter % 8 === 0 && !isPointerDown) {
+                historySlider.value = String(getNearestRealIndex());
+            }
+        };
+
+        historyCarousel.addEventListener('scroll', syncSliderWithViewport, { passive: true });
 
         historyItems.forEach((item) => {
             item.addEventListener('click', () => {
@@ -553,6 +568,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.cancelAnimationFrame(rafId);
             }
         });
+
+        if (logicalItemsCount) {
+            centerByLogicalIndex(0);
+        }
     }
 
 });

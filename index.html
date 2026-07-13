@@ -147,8 +147,17 @@
                 </div>
                 </div>
             </div>
-            <button type="button" class="history-control prev" aria-label="Ver foto anterior">‹</button>
-            <button type="button" class="history-control next" aria-label="Ver foto siguiente">›</button>
+            <div class="history-slider-wrap" aria-label="Navegar fotos">
+                <input
+                    type="range"
+                    class="history-slider"
+                    min="0"
+                    max="5"
+                    step="1"
+                    value="0"
+                    aria-label="Desplazar carrusel"
+                >
+            </div>
         </div>
     </section>
 

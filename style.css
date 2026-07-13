@@ -176,7 +176,7 @@ body {
 .history-carousel-shell {
     position: relative;
     margin-top: 2rem;
-    padding: 0 3.25rem;
+    padding: 0 1rem;
 }
 
 .history-carousel {
@@ -209,36 +209,53 @@ body {
     opacity: 0;
 }
 
-.history-control {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 44px;
-    height: 44px;
-    border: none;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.85);
-    color: var(--primary-dark);
-    font-size: 1.9rem;
-    line-height: 1;
+.history-slider-wrap {
+    margin: 0.9rem auto 0;
+    width: min(520px, 82vw);
+}
+
+.history-slider {
+    width: 100%;
+    accent-color: var(--primary);
     cursor: pointer;
-    z-index: 3;
-    box-shadow: 0 8px 18px rgba(62, 43, 29, 0.15);
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
-.history-control:hover {
-    background: #ffffff;
+.history-slider:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
 }
 
-.history-control.prev {
-    left: 0.55rem;
+.history-slider::-webkit-slider-runnable-track {
+    height: 0.4rem;
+    border-radius: 999px;
+    background: linear-gradient(90deg, rgba(127, 92, 69, 0.22), rgba(127, 92, 69, 0.55));
 }
 
-.history-control.next {
-    right: 0.55rem;
+.history-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    background: var(--primary-dark);
+    margin-top: -5px;
+    box-shadow: 0 4px 10px rgba(62, 43, 29, 0.2);
+}
+
+.history-slider::-moz-range-track {
+    height: 0.4rem;
+    border-radius: 999px;
+    background: linear-gradient(90deg, rgba(127, 92, 69, 0.22), rgba(127, 92, 69, 0.55));
+}
+
+.history-slider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    background: var(--primary-dark);
+    box-shadow: 0 4px 10px rgba(62, 43, 29, 0.2);
 }
 
 .history-carousel::before,
@@ -315,7 +332,7 @@ body {
     }
 
     .history-carousel-shell {
-        padding: 0 2.8rem;
+        padding: 0 0.25rem;
     }
 
     .history-track {
@@ -327,18 +344,9 @@ body {
         height: 380px;
     }
 
-    .history-control {
-        width: 34px;
-        height: 34px;
-        font-size: 1.35rem;
-    }
-
-    .history-control.prev {
-        left: 0.35rem;
-    }
-
-    .history-control.next {
-        right: 0.35rem;
+    .history-slider-wrap {
+        width: min(420px, 88vw);
+        margin-top: 0.75rem;
     }
 }
 
