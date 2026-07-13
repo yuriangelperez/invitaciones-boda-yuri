@@ -173,11 +173,14 @@ body {
     max-width: 1400px;
 }
 
-.history-carousel {
+.history-carousel-shell {
     position: relative;
+    margin-top: 2rem;
+}
+
+.history-carousel {
     overflow-x: auto;
     overflow-y: hidden;
-    margin-top: 2rem;
     padding: 0.5rem 0;
     touch-action: pan-x;
     -webkit-overflow-scrolling: touch;
@@ -230,11 +233,11 @@ body {
 }
 
 .history-control.prev {
-    left: 0.4rem;
+    left: 0.25rem;
 }
 
 .history-control.next {
-    right: 0.4rem;
+    right: 0.25rem;
 }
 
 .history-carousel::before,
@@ -288,8 +291,14 @@ body {
     font-size: 1.2rem;
     font-style: italic;
 }
-.history-item:hover img { transform: scale(1.1); }
-.history-item:hover .overlay { opacity: 1; }
+
+.history-item.is-active img {
+    transform: scale(1.06);
+}
+
+.history-item.is-active .overlay {
+    opacity: 1;
+}
 
 @media (max-width: 1200px) {
     .history-section {

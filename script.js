@@ -342,14 +342,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- 6. CARRUSEL: SWIPE/DRAG EN TOUCH Y ESCRITORIO ---
-    const historyCarousel = document.querySelector('.history-carousel');
+    const historyShell = document.querySelector('.history-carousel-shell');
+    const historyCarousel = historyShell?.querySelector('.history-carousel');
     const historyTrack = historyCarousel?.querySelector('.history-track');
     if (historyCarousel && historyTrack) {
-        const prevControl = historyCarousel.querySelector('.history-control.prev');
-        const nextControl = historyCarousel.querySelector('.history-control.next');
+        const prevControl = historyShell.querySelector('.history-control.prev');
+        const nextControl = historyShell.querySelector('.history-control.next');
+        const historyItems = historyTrack.querySelectorAll('.history-item:not([aria-hidden="true"])');
         let isPointerDown = false;
         let startX = 0;
         let startScrollLeft = 0;
+        let draggedDistance = 0;
+        let suppressItemClickUntil = 0;
         let rafId = null;
         let lastFrameTime = 0;
         let manualPauseUntil = 0;
@@ -415,6 +419,7 @@ document.addEventListener('DOMContentLoaded', () => {
             isPointerDown = true;
             startX = event.clientX;
             startScrollLeft = historyCarousel.scrollLeft;
+            draggedDistance = 0;
             historyCarousel.classList.add('is-dragging');
             historyCarousel.setPointerCapture(event.pointerId);
             lastFrameTime = 0;
@@ -426,6 +431,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const deltaX = event.clientX - startX;
+            draggedDistance = Math.max(draggedDistance, Math.abs(deltaX));
             historyCarousel.scrollLeft = startScrollLeft - deltaX;
             normalizeLoopPosition();
             event.preventDefault();
@@ -443,6 +449,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 historyCarousel.releasePointerCapture(event.pointerId);
             }
 
+            if (draggedDistance > 8) {
+                suppressItemClickUntil = performance.now() + 220;
+            }
+
             lastFrameTime = 0;
         };
 
@@ -457,6 +467,21 @@ document.addEventListener('DOMContentLoaded', () => {
         if (nextControl) {
             nextControl.addEventListener('click', () => moveByStep(1));
         }
+
+        historyItems.forEach((item) => {
+            item.addEventListener('click', () => {
+                if (performance.now() < suppressItemClickUntil) {
+                    return;
+                }
+
+                const willActivate = !item.classList.contains('is-active');
+                historyItems.forEach((historyItem) => historyItem.classList.remove('is-active'));
+
+                if (willActivate) {
+                    item.classList.add('is-active');
+                }
+            });
+        });
 
         window.addEventListener('resize', normalizeLoopPosition);
         window.addEventListener('beforeunload', () => {
