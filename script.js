@@ -346,13 +346,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const historyCarousel = historyShell?.querySelector('.history-carousel');
     const historyTrack = historyCarousel?.querySelector('.history-track');
     if (historyCarousel && historyTrack) {
-        const historySlider = historyShell.querySelector('.history-slider');
+        const historySegments = Array.from(historyShell.querySelectorAll('.history-segment'));
         const allHistoryItems = Array.from(historyTrack.querySelectorAll('.history-item'));
         const historyItems = historyTrack.querySelectorAll('.history-item:not([aria-hidden="true"])');
         const logicalItemsCount = historyItems.length;
         let isPointerDown = false;
+        let isMouseDragging = false;
         let startX = 0;
         let startScrollLeft = 0;
+        let touchStartScrollLeft = 0;
         let draggedDistance = 0;
         let suppressItemClickUntil = 0;
         let rafId = null;
@@ -464,15 +466,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 behavior: 'smooth'
             });
             lastFrameTime = 0;
-
-            if (historySlider) {
-                historySlider.value = String(logicalIndex);
-            }
         };
 
-        if (historySlider) {
-            historySlider.max = String(Math.max(logicalItemsCount - 1, 0));
-        }
+        const setActiveSegment = (logicalIndex) => {
+            if (!historySegments.length) {
+                return;
+            }
+
+            historySegments.forEach((segment, index) => {
+                const isActive = index === logicalIndex;
+                segment.classList.toggle('is-active', isActive);
+
+                if (isActive) {
+                    segment.setAttribute('aria-current', 'true');
+                } else {
+                    segment.removeAttribute('aria-current');
+                }
+            });
+        };
 
         historyCarousel.addEventListener('pointerdown', (event) => {
             if (event.pointerType === 'mouse' && event.button !== 0) {
@@ -480,16 +491,22 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             isPointerDown = true;
+            isMouseDragging = event.pointerType === 'mouse';
             startX = event.clientX;
             startScrollLeft = historyCarousel.scrollLeft;
+            touchStartScrollLeft = historyCarousel.scrollLeft;
             draggedDistance = 0;
             historyCarousel.classList.add('is-dragging');
-            historyCarousel.setPointerCapture(event.pointerId);
+
+            if (isMouseDragging) {
+                historyCarousel.setPointerCapture(event.pointerId);
+            }
+
             lastFrameTime = 0;
         });
 
         historyCarousel.addEventListener('pointermove', (event) => {
-            if (!isPointerDown) {
+            if (!isPointerDown || !isMouseDragging) {
                 return;
             }
 
@@ -506,13 +523,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             isPointerDown = false;
+            const wasMouseDragging = isMouseDragging;
+            isMouseDragging = false;
             historyCarousel.classList.remove('is-dragging');
 
-            if (event.pointerId !== undefined && historyCarousel.hasPointerCapture(event.pointerId)) {
+            if (wasMouseDragging && event.pointerId !== undefined && historyCarousel.hasPointerCapture(event.pointerId)) {
                 historyCarousel.releasePointerCapture(event.pointerId);
             }
 
-            if (draggedDistance > 8) {
+            const touchMoved = Math.abs(historyCarousel.scrollLeft - touchStartScrollLeft) > 8;
+            if (draggedDistance > 8 || touchMoved) {
                 suppressItemClickUntil = performance.now() + 220;
             }
 
@@ -523,29 +543,26 @@ document.addEventListener('DOMContentLoaded', () => {
         historyCarousel.addEventListener('pointercancel', stopDragging);
         historyCarousel.addEventListener('lostpointercapture', stopDragging);
 
-        if (historySlider) {
-            const onSliderChange = () => {
-                const targetIndex = parseInt(historySlider.value, 10) || 0;
-                centerByLogicalIndex(targetIndex);
-            };
-
-            historySlider.addEventListener('input', onSliderChange);
-            historySlider.addEventListener('change', onSliderChange);
-        }
+        historySegments.forEach((segment, index) => {
+            segment.addEventListener('click', () => {
+                centerByLogicalIndex(index);
+                setActiveSegment(index);
+            });
+        });
 
         let rafSyncCounter = 0;
-        const syncSliderWithViewport = () => {
-            if (!historySlider || !logicalItemsCount) {
+        const syncSegmentsWithViewport = () => {
+            if (!logicalItemsCount) {
                 return;
             }
 
             rafSyncCounter += 1;
             if (rafSyncCounter % 8 === 0 && !isPointerDown) {
-                historySlider.value = String(getNearestRealIndex());
+                setActiveSegment(getNearestRealIndex());
             }
         };
 
-        historyCarousel.addEventListener('scroll', syncSliderWithViewport, { passive: true });
+        historyCarousel.addEventListener('scroll', syncSegmentsWithViewport, { passive: true });
 
         historyItems.forEach((item) => {
             item.addEventListener('click', () => {
@@ -571,6 +588,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (logicalItemsCount) {
             centerByLogicalIndex(0);
+            setActiveSegment(0);
         }
     }
 

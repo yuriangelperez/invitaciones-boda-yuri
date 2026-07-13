@@ -10,50 +10,6 @@
     --accent: #b7895f;
     --line: #e5d8c6;
     --ok: #3f7d3a;
-    --error: #b74545;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    scroll-behavior: smooth;
-}
-
-body {
-    font-family: 'Montserrat', sans-serif;
-    background:
-        radial-gradient(circle at 10% 5%, rgba(255, 255, 255, 0.7), transparent 30%),
-        radial-gradient(circle at 90% 10%, rgba(215, 184, 148, 0.24), transparent 35%),
-        var(--bg-main);
-    color: var(--text);
-    line-height: 1.6;
-}
-
-.container {
-    width: 90%;
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 4rem 0;
-}
-
-.text-center { text-align: center; }
-.section-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 2.2rem;
-    color: var(--primary);
-    font-style: italic;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-}
-.section-subtitle {
-    font-size: 1.1rem;
-    margin-bottom: 2.5rem;
-    opacity: 0.85;
-}
-
-/* 1. NAVBAR */
 .navbar {
     position: fixed;
     top: 0;
@@ -214,6 +170,37 @@ body {
     width: min(520px, 82vw);
 }
 
+.history-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+}
+
+.history-segment {
+    border: none;
+    width: 2.9rem;
+    height: 0.38rem;
+    border-radius: 999px;
+    background: rgba(127, 92, 69, 0.25);
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.history-segment:hover {
+    background: rgba(127, 92, 69, 0.45);
+}
+
+.history-segment.is-active {
+    background: var(--primary-dark);
+    transform: scaleY(1.08);
+}
+
+.history-segment:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+}
+
 .history-slider {
     width: 100%;
     accent-color: var(--primary);
@@ -347,6 +334,15 @@ body {
     .history-slider-wrap {
         width: min(420px, 88vw);
         margin-top: 0.75rem;
+    }
+
+    .history-pagination {
+        gap: 0.35rem;
+    }
+
+    .history-segment {
+        width: 2.35rem;
+        height: 0.34rem;
     }
 }
 

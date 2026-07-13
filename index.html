@@ -148,15 +148,14 @@
                 </div>
             </div>
             <div class="history-slider-wrap" aria-label="Navegar fotos">
-                <input
-                    type="range"
-                    class="history-slider"
-                    min="0"
-                    max="5"
-                    step="1"
-                    value="0"
-                    aria-label="Desplazar carrusel"
-                >
+                <div class="history-pagination" role="tablist" aria-label="Secciones del carrusel">
+                    <button type="button" class="history-segment is-active" data-index="0" aria-label="Ir a foto 1" aria-current="true"></button>
+                    <button type="button" class="history-segment" data-index="1" aria-label="Ir a foto 2"></button>
+                    <button type="button" class="history-segment" data-index="2" aria-label="Ir a foto 3"></button>
+                    <button type="button" class="history-segment" data-index="3" aria-label="Ir a foto 4"></button>
+                    <button type="button" class="history-segment" data-index="4" aria-label="Ir a foto 5"></button>
+                    <button type="button" class="history-segment" data-index="5" aria-label="Ir a foto 6"></button>
+                </div>
             </div>
         </div>
     </section>
