@@ -348,8 +348,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (historyCarousel && historyTrack) {
         const historySegments = Array.from(historyShell.querySelectorAll('.history-segment'));
         const allHistoryItems = Array.from(historyTrack.querySelectorAll('.history-item'));
-        const historyItems = historyTrack.querySelectorAll('.history-item:not([aria-hidden="true"])');
-        const logicalItemsCount = historyItems.length;
+        const realHistoryItems = Array.from(historyTrack.querySelectorAll('.history-item:not([aria-hidden="true"])'));
+        const logicalItemsCount = realHistoryItems.length;
         let isPointerDown = false;
         let isMouseDragging = false;
         let startX = 0;
@@ -357,10 +357,6 @@ document.addEventListener('DOMContentLoaded', () => {
         let touchStartScrollLeft = 0;
         let draggedDistance = 0;
         let suppressItemClickUntil = 0;
-        let rafId = null;
-        let lastFrameTime = 0;
-        let manualPauseUntil = 0;
-        const autoplaySpeed = window.matchMedia('(max-width: 768px)').matches ? 24 : 34;
 
         const getLoopWidth = () => historyTrack.scrollWidth / 2;
 
@@ -376,24 +372,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 historyCarousel.scrollLeft += loopWidth;
             }
         };
-
-        const autoScroll = (time) => {
-            if (!lastFrameTime) {
-                lastFrameTime = time;
-            }
-
-            const deltaSeconds = (time - lastFrameTime) / 1000;
-            lastFrameTime = time;
-
-            if (!isPointerDown && time >= manualPauseUntil) {
-                historyCarousel.scrollLeft += autoplaySpeed * deltaSeconds;
-                normalizeLoopPosition();
-            }
-
-            rafId = window.requestAnimationFrame(autoScroll);
-        };
-
-        rafId = window.requestAnimationFrame(autoScroll);
 
         const getViewportCenter = () => historyCarousel.scrollLeft + (historyCarousel.clientWidth / 2);
 
@@ -461,12 +439,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            manualPauseUntil = performance.now() + 900;
             historyCarousel.scrollTo({
                 left: targetLeft,
                 behavior: 'smooth'
             });
-            lastFrameTime = 0;
         };
 
         const setActiveSegment = (logicalIndex) => {
@@ -483,6 +459,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     segment.removeAttribute('aria-current');
                 }
+            });
+        };
+
+        const setActiveItem = (logicalIndex) => {
+            if (!realHistoryItems.length) {
+                return;
+            }
+
+            realHistoryItems.forEach((item, index) => {
+                item.classList.toggle('is-active', index === logicalIndex);
             });
         };
 
@@ -504,8 +490,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (isMouseDragging) {
                 historyCarousel.setPointerCapture(event.pointerId);
             }
-
-            lastFrameTime = 0;
         });
 
         historyCarousel.addEventListener('pointermove', (event) => {
@@ -540,8 +524,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (draggedDistance > 8 || touchMoved) {
                 suppressItemClickUntil = performance.now() + 220;
             }
-
-            lastFrameTime = 0;
         };
 
         historyCarousel.addEventListener('pointerup', stopDragging);
@@ -552,6 +534,7 @@ document.addEventListener('DOMContentLoaded', () => {
             segment.addEventListener('click', () => {
                 centerByLogicalIndex(index);
                 setActiveSegment(index);
+                setActiveItem(index);
             });
         });
 
@@ -563,33 +546,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
             rafSyncCounter += 1;
             if (rafSyncCounter % 8 === 0 && !isPointerDown) {
-                setActiveSegment(getNearestRealIndex());
+                const nearestIndex = getNearestRealIndex();
+                setActiveSegment(nearestIndex);
+                setActiveItem(nearestIndex);
             }
         };
 
         historyCarousel.addEventListener('scroll', syncSegmentsWithViewport, { passive: true });
 
-        historyItems.forEach((item) => {
+        realHistoryItems.forEach((item, index) => {
             item.addEventListener('click', () => {
                 if (performance.now() < suppressItemClickUntil) {
                     return;
                 }
 
                 const willActivate = !item.classList.contains('is-active');
-                historyItems.forEach((historyItem) => historyItem.classList.remove('is-active'));
+                realHistoryItems.forEach((historyItem) => historyItem.classList.remove('is-active'));
 
                 if (willActivate) {
                     item.classList.add('is-active');
+                    setActiveSegment(index);
                 }
             });
         });
 
         window.addEventListener('resize', normalizeLoopPosition);
-        window.addEventListener('beforeunload', () => {
-            if (rafId) {
-                window.cancelAnimationFrame(rafId);
-            }
-        });
 
         if (logicalItemsCount) {
             const loopWidth = getLoopWidth();
@@ -599,6 +580,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             centerByLogicalIndex(0);
             setActiveSegment(0);
+            setActiveItem(0);
         }
     }
 
