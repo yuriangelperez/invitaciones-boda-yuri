@@ -225,10 +225,6 @@ body {
     animation: history-slide 38s linear infinite;
 }
 
-.history-carousel:hover .history-track {
-    animation-play-state: paused;
-}
-
 .history-item {
     position: relative;
     overflow: hidden;
@@ -305,10 +301,6 @@ body {
 @media (hover: none) and (pointer: coarse) {
     .history-carousel {
         scroll-snap-type: x mandatory;
-    }
-
-    .history-track {
-        animation: none;
     }
 
     .history-item {
