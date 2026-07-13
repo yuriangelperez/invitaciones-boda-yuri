@@ -175,9 +175,26 @@ body {
 
 .history-carousel {
     position: relative;
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
     margin-top: 2rem;
     padding: 0.5rem 0;
+    touch-action: pan-x;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    cursor: grab;
+}
+
+.history-carousel::-webkit-scrollbar {
+    display: none;
+}
+
+.history-carousel.is-dragging {
+    cursor: grabbing;
+}
+
+.history-carousel.is-dragging .history-track {
+    animation-play-state: paused;
 }
 
 .history-carousel::before,
@@ -226,6 +243,8 @@ body {
     height: 100%;
     object-fit: cover;
     transition: transform 0.5s ease;
+    user-select: none;
+    -webkit-user-drag: none;
 }
 .overlay {
     position: absolute;
@@ -280,6 +299,20 @@ body {
     .history-item {
         flex-basis: 78vw;
         height: 450px;
+    }
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .history-carousel {
+        scroll-snap-type: x mandatory;
+    }
+
+    .history-track {
+        animation: none;
+    }
+
+    .history-item {
+        scroll-snap-align: center;
     }
 }
 

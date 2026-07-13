@@ -341,4 +341,51 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- 6. CARRUSEL: SWIPE/DRAG EN TOUCH Y ESCRITORIO ---
+    const historyCarousel = document.querySelector('.history-carousel');
+    if (historyCarousel) {
+        let isPointerDown = false;
+        let startX = 0;
+        let startScrollLeft = 0;
+
+        historyCarousel.addEventListener('pointerdown', (event) => {
+            if (event.pointerType === 'mouse' && event.button !== 0) {
+                return;
+            }
+
+            isPointerDown = true;
+            startX = event.clientX;
+            startScrollLeft = historyCarousel.scrollLeft;
+            historyCarousel.classList.add('is-dragging');
+            historyCarousel.setPointerCapture(event.pointerId);
+        });
+
+        historyCarousel.addEventListener('pointermove', (event) => {
+            if (!isPointerDown) {
+                return;
+            }
+
+            const deltaX = event.clientX - startX;
+            historyCarousel.scrollLeft = startScrollLeft - deltaX;
+            event.preventDefault();
+        }, { passive: false });
+
+        const stopDragging = (event) => {
+            if (!isPointerDown) {
+                return;
+            }
+
+            isPointerDown = false;
+            historyCarousel.classList.remove('is-dragging');
+
+            if (event.pointerId !== undefined && historyCarousel.hasPointerCapture(event.pointerId)) {
+                historyCarousel.releasePointerCapture(event.pointerId);
+            }
+        };
+
+        historyCarousel.addEventListener('pointerup', stopDragging);
+        historyCarousel.addEventListener('pointercancel', stopDragging);
+        historyCarousel.addEventListener('pointerleave', stopDragging);
+    }
+
 });
