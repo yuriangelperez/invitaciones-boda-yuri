@@ -348,7 +348,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (historyCarousel && historyTrack) {
         const prevControl = historyShell.querySelector('.history-control.prev');
         const nextControl = historyShell.querySelector('.history-control.next');
+        const allHistoryItems = Array.from(historyTrack.querySelectorAll('.history-item'));
         const historyItems = historyTrack.querySelectorAll('.history-item:not([aria-hidden="true"])');
+        const logicalItemsCount = historyItems.length;
         let isPointerDown = false;
         let startX = 0;
         let startScrollLeft = 0;
@@ -392,22 +394,76 @@ document.addEventListener('DOMContentLoaded', () => {
 
         rafId = window.requestAnimationFrame(autoScroll);
 
-        const getStepSize = () => {
-            const firstItem = historyTrack.querySelector('.history-item');
-            if (!firstItem) {
-                return historyCarousel.clientWidth * 0.8;
+        const getViewportCenter = () => historyCarousel.scrollLeft + (historyCarousel.clientWidth / 2);
+
+        const getItemCenter = (item) => item.offsetLeft + (item.offsetWidth / 2);
+
+        const wrapToLoop = (value) => {
+            const loopWidth = getLoopWidth();
+            if (!loopWidth) {
+                return value;
             }
 
-            const trackStyles = window.getComputedStyle(historyTrack);
-            const gap = parseFloat(trackStyles.gap || 0);
-            return firstItem.getBoundingClientRect().width + gap;
+            if (value >= loopWidth) {
+                return value - loopWidth;
+            }
+
+            if (value < 0) {
+                return value + loopWidth;
+            }
+
+            return value;
         };
 
-        const moveByStep = (direction) => {
-            const step = getStepSize();
+        const getNearestRealIndex = () => {
+            if (!logicalItemsCount || allHistoryItems.length === 0) {
+                return 0;
+            }
+
+            const viewportCenter = getViewportCenter();
+            let closestIndex = 0;
+            let closestDistance = Infinity;
+
+            allHistoryItems.forEach((item, index) => {
+                const distance = Math.abs(getItemCenter(item) - viewportCenter);
+                if (distance < closestDistance) {
+                    closestDistance = distance;
+                    closestIndex = index;
+                }
+            });
+
+            return closestIndex % logicalItemsCount;
+        };
+
+        const centerByLogicalIndex = (logicalIndex) => {
+            if (!logicalItemsCount || allHistoryItems.length === 0) {
+                return;
+            }
+
+            const viewportCenter = getViewportCenter();
+            const candidateItems = allHistoryItems.filter((_, index) => (index % logicalItemsCount) === logicalIndex);
+
+            if (candidateItems.length === 0) {
+                return;
+            }
+
+            let bestItem = candidateItems[0];
+            let bestDistance = Math.abs(getItemCenter(bestItem) - viewportCenter);
+
+            candidateItems.forEach((item) => {
+                const distance = Math.abs(getItemCenter(item) - viewportCenter);
+                if (distance < bestDistance) {
+                    bestDistance = distance;
+                    bestItem = item;
+                }
+            });
+
+            const targetLeft = wrapToLoop(getItemCenter(bestItem) - (historyCarousel.clientWidth / 2));
             manualPauseUntil = performance.now() + 900;
-            historyCarousel.scrollLeft += step * direction;
-            normalizeLoopPosition();
+            historyCarousel.scrollTo({
+                left: targetLeft,
+                behavior: 'smooth'
+            });
             lastFrameTime = 0;
         };
 
@@ -461,11 +517,19 @@ document.addEventListener('DOMContentLoaded', () => {
         historyCarousel.addEventListener('lostpointercapture', stopDragging);
 
         if (prevControl) {
-            prevControl.addEventListener('click', () => moveByStep(-1));
+            prevControl.addEventListener('click', () => {
+                const currentIndex = getNearestRealIndex();
+                const nextIndex = (currentIndex - 1 + logicalItemsCount) % logicalItemsCount;
+                centerByLogicalIndex(nextIndex);
+            });
         }
 
         if (nextControl) {
-            nextControl.addEventListener('click', () => moveByStep(1));
+            nextControl.addEventListener('click', () => {
+                const currentIndex = getNearestRealIndex();
+                const nextIndex = (currentIndex + 1) % logicalItemsCount;
+                centerByLogicalIndex(nextIndex);
+            });
         }
 
         historyItems.forEach((item) => {

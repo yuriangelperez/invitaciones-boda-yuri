@@ -176,6 +176,7 @@ body {
 .history-carousel-shell {
     position: relative;
     margin-top: 2rem;
+    padding: 0 3.25rem;
 }
 
 .history-carousel {
@@ -233,11 +234,11 @@ body {
 }
 
 .history-control.prev {
-    left: 0.25rem;
+    left: 0.55rem;
 }
 
 .history-control.next {
-    right: 0.25rem;
+    right: 0.55rem;
 }
 
 .history-carousel::before,
@@ -313,19 +314,31 @@ body {
         max-width: none;
     }
 
+    .history-carousel-shell {
+        padding: 0 2.8rem;
+    }
+
     .history-track {
         gap: 1rem;
     }
 
     .history-item {
-        flex-basis: 78vw;
-        height: 450px;
+        flex-basis: 66vw;
+        height: 380px;
     }
 
     .history-control {
-        width: 38px;
-        height: 38px;
-        font-size: 1.5rem;
+        width: 34px;
+        height: 34px;
+        font-size: 1.35rem;
+    }
+
+    .history-control.prev {
+        left: 0.35rem;
+    }
+
+    .history-control.next {
+        right: 0.35rem;
     }
 }
 
